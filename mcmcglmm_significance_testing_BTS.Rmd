@@ -1,0 +1,34 @@
+---
+title: "MCMCglmm Significance Testing - Brown Treesnakes (*Boiga irregularis*)"
+output: html_notebook
+---
+
+#Overview
+
+This R notebook details significance testing of heritability and repeatability for 3 traits important to Brown Treesnake control and reproduction: **body condition (BCI)**, **snout-vent length (SVL)**, and **trappabability**. Refer to Levine *et al*. (2019) for details regarding this data set. The pedigree includes 73 dummy individuals.
+
+Based off of sensitivity analysis of priors, the priors used for all models assumes phenotypic variation is split evenly between additive genetic, individual permanent environment, and residual variance components with a low degree of belief (n = 0.2).
+
+The prior was specified with the code: list(G = list(G1 = list(V =           matrix(p.var/3), nu = 0.2), G2 = list(V = matrix(p.var/3), nu = 0.2)), R = list(V = matrix(p.var/3, nu = 0.2).
+
+p.var = phenotypic variance of the trait as estimated from the data.
+
+Significance of heritability for each trait was tested by comparing the deviance information criteria for models containing the "animal" term versus those of models without the "animal" term. A lower DIC is indicative of the preferred model, while DIC < 10 are strong evidence of a preferred model (Martin and Festa-Bianchet 2012).
+
+Differently, significance of repeatability for each trait was testing by comparing the deviance information criteria for models containing the "individual" term (but not the "animal" term; note: additive genetic variation is a part of individual variation) versus models without the "individual" term.
+
+For reduced models, the prior is adjusted to split phenotypic variation evenly among the remaining variance commponents.
+
+#Significance Testing -- Heritability
+
+##Body Condition (BCI) Heritability
+```{r}
+#load model with "animal" term for BCI
+load("BCI_1_dummy_SVLfilt.RData")
+
+#extract DIC from model with "animal" term
+DIC_full <- model_BCI1$DIC
+
+
+```
+
