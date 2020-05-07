@@ -3,8 +3,8 @@ title: "MCMCglmm Diagnostics -- Brown Treesnake (*Boiga irregularis*) Heritabili
 output: html_notebook
 ---
 
-# Overview
-This R notebook details the testing of two different priors in variance component estimation for 3 traits important to Brown Treesnake control and reproduction: body condition (BCI), snout-vent length (SVL), and trappability. Refer to Levine *et al*. (2019) for details regarding this data set. The pedigree includes 73 dummy individuals.
+#Overview
+This R notebook details the testing of two different priors in variance component estimation for 3 traits important to Brown Treesnake control and reproduction: **body condition (BCI)**, **snout-vent length (SVL)**, and **trappability**. Refer to Levine *et al*. (2019) for details regarding this data set. The pedigree includes 73 dummy individuals.
 
 The two different sets of priors tested are:
 
@@ -21,7 +21,7 @@ For both priors, p.var = phenotypic variance of the trait as estimated from the 
 **Note**: The priors were tested for each trait, denoted by 1 or 2. For example, BCI1 is the model for BCI tested with prior 1, BCI2 is the model for BCI tested with prior 2. 
 
 
-# MCMCglmm Diagnostics for BCI--
+#1. MCMCglmm Diagnostics for Body Condition--
 
 ## BCI1
 ```{r}
@@ -82,7 +82,7 @@ repeatability <- (model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"])/(model_BC
 #view posterior mode of repeatability
 cat("Posterior Mode of Repeatability for BCI1: ",round(posterior.mode(repeatability), digits = 3) )
 ```
-## BCI2
+##BCI2
 ```{r}
 #clear memory
 rm(list=ls())
@@ -141,6 +141,251 @@ repeatability <- (model_BCI2$VCV[, "animal"] + model_BCI2$VCV[, "ID"])/(model_BC
 #view posterior mode of repeatability
 cat("Posterior Mode of Repeatability for BCI2: ",round(posterior.mode(repeatability), digits = 3) )
 ```
+#2. MCMCglmm Diagnostics for Snout-Vent Length--
+
+##SVL1
+```{r}
+#clear memory
+rm(list=ls())
+
+#load R output
+load("SVL_1_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_SVL1)
+
+#view priors for model
+prior_SVL1
+
+#view trace plots for fixed effects
+plot(model_SVL1$Sol)
+
+#view trace plots for random effects
+plot(model_SVL1$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_SVL1$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_SVL1$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_SVL1$Sol)
+
+#view effective size for random effects
+effectiveSize(model_SVL1$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_SVL1$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_SVL1$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for SVL1: ", round(posterior.mode(model_SVL1$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for SVL1: ", round(posterior.mode(model_SVL1$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_SVL1$VCV[, "animal"]/(model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for SVL1: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"])/(model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for SVL1: ",round(posterior.mode(repeatability), digits = 3) )
+```
+
+##SVL2
+```{r}
+#clear memory
+rm(list=ls())
+
+#load R output
+load("SVL_2_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_SVL2)
+
+#view priors for model
+prior_SVL2
+
+#view trace plots for fixed effects
+plot(model_SVL2$Sol)
+
+#view trace plots for random effects
+plot(model_SVL2$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_SVL2$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_SVL2$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_SVL2$Sol)
+
+#view effective size for random effects
+effectiveSize(model_SVL2$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_SVL2$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_SVL2$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for SVL2: ", round(posterior.mode(model_SVL2$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for SVL2: ", round(posterior.mode(model_SVL2$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_SVL2$VCV[, "animal"]/(model_SVL2$VCV[, "animal"] + model_SVL2$VCV[, "ID"] + model_SVL2$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for SVL2: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_SVL2$VCV[, "animal"] + model_SVL2$VCV[, "ID"])/(model_SVL2$VCV[, "animal"] + model_SVL2$VCV[, "ID"] + model_SVL2$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for SVL2: ",round(posterior.mode(repeatability), digits = 3) )
+```
+
+#MCMCglmm Diagnostics for Trappability--
+
+##TRAP1
+```{r}
+#clear memory
+rm(list=ls())
+
+#load R output
+load("TRAP_1_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_TRAP1)
+
+#view priors for model
+prior_TRAP1
+
+#view trace plots for fixed effects
+plot(model_TRAP1$Sol)
+
+#view trace plots for random effects
+plot(model_TRAP1$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_TRAP1$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_TRAP1$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_TRAP1$Sol)
+
+#view effective size for random effects
+effectiveSize(model_TRAP1$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_TRAP1$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_TRAP1$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for TRAP1: ", round(posterior.mode(model_TRAP1$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for TRAP1: ", round(posterior.mode(model_TRAP1$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_TRAP1$VCV[, "animal"]/(model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for TRAP1: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"])/(model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for TRAP1: ",round(posterior.mode(repeatability), digits = 3) )
+```
+
+##TRAP2
+```{r}
+#clear memory
+rm(list=ls())
+
+#load R output
+load("TRAP_2_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_TRAP2)
+
+#view priors for model
+prior_TRAP2
+
+#view trace plots for fixed effects
+plot(model_TRAP2$Sol)
+
+#view trace plots for random effects
+plot(model_TRAP2$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_TRAP2$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_TRAP2$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_TRAP2$Sol)
+
+#view effective size for random effects
+effectiveSize(model_TRAP2$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_TRAP2$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_TRAP2$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for TRAP2: ", round(posterior.mode(model_TRAP2$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for TRAP2: ", round(posterior.mode(model_TRAP2$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_TRAP2$VCV[, "animal"]/(model_TRAP2$VCV[, "animal"] + model_TRAP2$VCV[, "ID"] + model_TRAP2$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for TRAP2: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_TRAP2$VCV[, "animal"] + model_TRAP2$VCV[, "ID"])/(model_TRAP2$VCV[, "animal"] + model_TRAP2$VCV[, "ID"] + model_TRAP2$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for TRAP2: ",round(posterior.mode(repeatability), digits = 3) )
+```
+
+
 
 
 `
