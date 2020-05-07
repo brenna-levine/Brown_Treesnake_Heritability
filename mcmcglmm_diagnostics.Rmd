@@ -1,0 +1,150 @@
+---
+title: "MCMCglmm Diagnostics -- Brown Treesnake (*Boiga irregularis*) Heritability"
+output: html_notebook
+---
+
+# Overview
+This R notebook details the testing of two different priors in variance component estimation for 3 traits important to Brown Treesnake control and reproduction: body condition (BCI), snout-vent length (SVL), and trappability. Refer to Levine *et al*. (2019) for details regarding this data set. The pedigree includes 73 dummy individuals.
+
+The two different sets of priors tested are:
+
+**Prior 1**: Phenotypic variation split evenly between additive genetic, individual permanent environment, and residual variance components with a low degree of belief (n = 0.2).
+
+Prior 1 was specified with the code: list(G = list(G1 = list(V =           matrix(p.var/3), nu = 0.2), G2 = list(V = matrix(p.var/3), nu = 0.2)), R = list(V = matrix(p.var/3, nu = 0.2) 
+
+**Prior 2**: 95% of phenotypic variance is due to the additive genetic effect, with the remaining 5% of phenotypic variance due evenly to individual permanent environment (2.5%) and residual (2.5%) effects, with a low degree of belief (n = 0.2).
+
+Prior 2 was specified with the code: list(G = list(G1 = list(V = matrix(p.var x 0.95), nu = 0.2), G2 = list(V = matrix(p.var x 0.025), nu = 0.2), R = list(V = matrix(p.var x 0.025), nu = 0.2)
+
+For both priors, p.var = phenotypic variance of the trait as estimated from the data.
+
+**Note**: The priors were tested for each trait, denoted by 1 or 2. For example, BCI1 is the model for BCI tested with prior 1, BCI2 is the model for BCI tested with prior 2. 
+
+
+# MCMCglmm Diagnostics for BCI--
+
+## BCI1
+```{r}
+#load the MCMCglmm package
+library(MCMCglmm)
+
+#load R output
+load("BCI_1_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_BCI1)
+
+#view priors for model
+prior_BCI1
+
+#view trace plots for fixed effects
+plot(model_BCI1$Sol)
+
+#view trace plots for random effects
+plot(model_BCI1$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_BCI1$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_BCI1$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_BCI1$Sol)
+
+#view effective size for random effects
+effectiveSize(model_BCI1$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_BCI1$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_BCI1$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for BCI1: ", round(posterior.mode(model_BCI1$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for BCI1: ", round(posterior.mode(model_BCI1$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_BCI1$VCV[, "animal"]/(model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"] + model_BCI1$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for BCI1: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"])/(model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"] + model_BCI1$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for BCI1: ",round(posterior.mode(repeatability), digits = 3) )
+```
+## BCI2
+```{r}
+#clear memory
+rm(list=ls())
+
+#load R output
+load("BCI_2_dummy_SVLfilt.RData")
+
+#set the dimensions for the graphics
+par(mar=c(1,1,1,1))
+
+#view model
+summary(model_BCI2)
+
+#view priors for model
+prior_BCI2
+
+#view trace plots for fixed effects
+plot(model_BCI2$Sol)
+
+#view trace plots for random effects
+plot(model_BCI2$VCV)
+
+#view autocorrelation for fixed effects
+autocorr.diag(model_BCI2$Sol)
+
+#view autocorrelation for random effects
+autocorr.diag(model_BCI2$VCV)
+
+#view effective size for fixed effects
+effectiveSize(model_BCI2$Sol)
+
+#view effective size for random effects
+effectiveSize(model_BCI2$VCV)
+
+#test for convergence of fixed effect
+heidel.diag(model_BCI2$Sol)
+
+#test for convergence of random effect
+heidel.diag(model_BCI2$VCV)
+
+#view posterior mode of additive genetic variance
+cat("Posterior Mode of Additive Genetic Variance for BCI2: ", round(posterior.mode(model_BCI2$VCV[, "animal"]), digits = 3))
+
+#view posterior mode of individual
+cat("Posterior Mode of Individual Variance for BCI2: ", round(posterior.mode(model_BCI2$VCV[, "ID"]), digits = 3))
+
+#calculate heritability
+herit <- model_BCI2$VCV[, "animal"]/(model_BCI2$VCV[, "animal"] + model_BCI2$VCV[, "ID"] + model_BCI2$VCV[, "units"] )
+
+#view posterior mode of heritability
+cat("Posterior Mode of Heritability for BCI2: ",round(posterior.mode(herit), digits = 3) )
+
+#calculate repeatability
+repeatability <- (model_BCI2$VCV[, "animal"] + model_BCI2$VCV[, "ID"])/(model_BCI2$VCV[, "animal"] + model_BCI2$VCV[, "ID"] + model_BCI2$VCV[, "units"])
+
+#view posterior mode of repeatability
+cat("Posterior Mode of Repeatability for BCI2: ",round(posterior.mode(repeatability), digits = 3) )
+```
+
+
+`
+
+
+
+
