@@ -1,9 +1,9 @@
 ---
 title: "MCMCglmm Significance Testing - Brown Treesnakes (*Boiga irregularis*)"
 output:
-  word_document: default
-  pdf_document: default
   html_notebook: default
+  pdf_document: default
+  word_document: default
 ---
 
 #Overview
@@ -44,6 +44,42 @@ summary(model_BCI1)
 
 #view priors to confirm their correct
 prior_BCI1
+
+#extract posterior mode of Va
+Va <- posterior.mode(model_BCI1$VCV[, "animal"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_BCI1$VCV[, "animal"])
+
+#cat Va estimate with 95% HPD
+cat("The Va estimate for BCI is: ", round(Va, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vi
+Vi <- posterior.mode(model_BCI1$VCV[, "ID"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_BCI1$VCV[, "ID"])
+
+#cat Va estimate with 95% HPD
+cat("The Vi estimate for BCI is: ", round(Vi, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vr
+Vr <- posterior.mode(model_BCI1$VCV[, "units"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_BCI1$VCV[, "units"])
+
+#cat Va estimate with 95% HPD
+cat("The Vr estimate for BCI is: ", round(Vr, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate Vp
+Vp <- model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"] + model_BCI1$VCV[, "units"]
+
+#HPD intervals for Vp
+x <- HPDinterval(Vp)
+
+#cat Vp estimate with 95% HPD
+cat("The Vp estimate for BCI is: ", round(posterior.mode(Vp), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
 
 #calculate heritability
 herit <- model_BCI1$VCV[, "animal"]/(model_BCI1$VCV[, "animal"] + model_BCI1$VCV[, "ID"] + model_BCI1$VCV[, "units"] )
@@ -99,6 +135,42 @@ summary(model_SVL1)
 #view priors to confirm they're correct
 prior_SVL1
 
+#extract posterior mode of Va
+Va <- posterior.mode(model_SVL1$VCV[, "animal"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "animal"])
+
+#cat Va estimate with 95% HPD
+cat("The Va estimate for SVL is: ", round(Va, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vi
+Vi <- posterior.mode(model_SVL1$VCV[, "ID"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "ID"])
+
+#cat Va estimate with 95% HPD
+cat("The Vi estimate for SVL is: ", round(Vi, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vr
+Vr <- posterior.mode(model_SVL1$VCV[, "units"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "units"])
+
+#cat Va estimate with 95% HPD
+cat("The Vr estimate for SVL is: ", round(Vr, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate Vp
+Vp <- model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"]
+
+#HPD intervals for Vp
+x <- HPDinterval(Vp)
+
+#cat Vp estimate with 95% HPD
+cat("The Vp estimate for SVL is: ", round(posterior.mode(Vp), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
 #calculate heritability
 herit <- model_SVL1$VCV[, "animal"]/(model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"] )
 
@@ -151,6 +223,42 @@ summary(model_TRAP1)
 
 #view priors to confirm they're correct
 prior_TRAP1
+
+#extract posterior mode of Va
+Va <- posterior.mode(model_TRAP1$VCV[, "animal"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "animal"])
+
+#cat Va estimate with 95% HPD
+cat("The Va estimate for Trappability is: ", round(Va, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vi
+Vi <- posterior.mode(model_TRAP1$VCV[, "ID"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "ID"])
+
+#cat Va estimate with 95% HPD
+cat("The Vi estimate for Trappability is: ", round(Vi, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vr
+Vr <- posterior.mode(model_TRAP1$VCV[, "units"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "units"])
+
+#cat Va estimate with 95% HPD
+cat("The Vr estimate for Trappability is: ", round(Vr, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate Vp
+Vp <- model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"]
+
+#HPD intervals for Vp
+x <- HPDinterval(Vp)
+
+#cat Vp estimate with 95% HPD
+cat("The Vp estimate for Trappability is: ", round(posterior.mode(Vp), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
 
 #calculate heritability
 herit <- model_TRAP1$VCV[, "animal"]/(model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"] )
