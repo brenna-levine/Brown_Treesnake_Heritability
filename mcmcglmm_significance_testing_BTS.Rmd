@@ -1,6 +1,9 @@
 ---
 title: "MCMCglmm Significance Testing - Brown Treesnakes (*Boiga irregularis*)"
-output: html_notebook
+output:
+  word_document: default
+  pdf_document: default
+  html_notebook: default
 ---
 
 #Overview
@@ -30,6 +33,9 @@ For reduced models, the prior is adjusted to split phenotypic variation evenly a
 
 ##Body Condition (BCI) Heritability
 ```{r}
+#load package
+library(MCMCglmm)
+
 #load model with "animal" term for BCI
 load("BCI_1_dummy_SVLfilt.RData")
 
@@ -71,9 +77,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether heritability is significant
 if(diff >= 10) {
-  cat("BCI model with animal term has significantly smaller DIC:", diff >= 10, "\n", "BCI has significant heritability.\n") 
+  cat("BCI model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "BCI model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "BCI has significant heritability.\n") 
 } else {
-  cat("BCI model with animal term has significantly smaller DIC:", diff >= 10, "\n", "BCI does not have significant heritability.")
+  cat("BCI model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "BCI model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "BCI does not have significant heritability.")
 }
 
 ```
@@ -125,9 +131,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether heritability is significant
 if(diff >= 10) {
-  cat("SVL model with animal term has significantly smaller DIC:", diff >= 10, "\n", "SVL has significant heritability.\n") 
+  cat("SVL model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL has significant heritability.\n") 
 } else {
-  cat("SVL model with animal term has significantly smaller DIC:", diff >= 10, "\n", "SVL does not have significant heritability.")
+  cat("SVL model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL does not have significant heritability.")
 }
 
 ```
@@ -178,9 +184,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether heritability is significant
 if(diff >= 10) {
-  cat("Trappability model with animal term has significantly smaller DIC:", diff >= 10, "\n", "Trappability has significant heritability.\n") 
+  cat("Trappability model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability has significant heritability.\n") 
 } else {
-  cat("Trappability model with animal term has significantly smaller DIC:", diff >= 10, "\n", "Trappability does not have significant heritability.")
+  cat("Trappability model with animal term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with animal term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability does not have significant heritability.")
 }
 
 ```
@@ -234,9 +240,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether repeatability is significant
 if(diff >= 10) {
-  cat("BCI model with ID term has significantly smaller DIC:", diff >= 10, "\n", "BCI has significant repeatability.\n") 
+  cat("BCI model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "BCI model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "BCI has significant repeatability\n") 
 } else {
-  cat("BCI model with ID term has significantly smaller DIC:", diff >= 10, "\n", "BCI does not have significant repeatability.")
+  cat("BCI model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "BCI model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "BCI does not have significant repeatability")
 }
 
 ```
@@ -287,9 +293,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether trappability is significant
 if(diff >= 10) {
-  cat("SVL model with ID term has significantly smaller DIC:", diff >= 10, "\n", "SVL has significant repeatability.\n") 
+  cat("SVL model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL has significant repeatability\n") 
 } else {
-  cat("SVL model with ID term has significantly smaller DIC:", diff >= 10, "\n", "SVL does not have significant repeatability.")
+  cat("SVL model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL does not have significant repeatability")
 }
 
 ```
@@ -341,9 +347,9 @@ diff <- DIC_reduced - DIC_full
 
 #test whether repeatability is significant
 if(diff >= 10) {
-  cat("Trappability model with ID term has significantly smaller DIC:", diff >= 10, "\n", "BCI has significant repeatability.\n") 
+  cat("Trappability model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability has significant repeatability\n") 
 } else {
-  cat("Trappability model with ID term has significantly smaller DIC:", diff >= 10, "\n", "Trappability does not have significant repeatability.")
+  cat("Trappability model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability does not have significant repeatability")
 }
 
 ```
