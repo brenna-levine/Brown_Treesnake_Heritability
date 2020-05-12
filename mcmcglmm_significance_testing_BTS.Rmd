@@ -1,9 +1,9 @@
 ---
 title: "MCMCglmm Significance Testing - Brown Treesnakes (*Boiga irregularis*)"
 output:
+  word_document: default
   html_notebook: default
   pdf_document: default
-  word_document: default
 ---
 
 #Overview
@@ -299,6 +299,94 @@ if(diff >= 10) {
 
 ```
 
+##Trappability (TRAP) Heritability with BCI as Fixed Effect
+```{r}
+#clear memory
+rm(list=ls())
+
+#load model with "animal" term for Trappability
+load("TRAP_1_dummy_SVLfilt2.RData")
+
+#view model to confirm it's correct
+summary(model_TRAP1)
+
+#view priors to confirm they're correct
+prior_TRAP1
+
+#extract posterior mode of Va
+Va <- posterior.mode(model_TRAP1$VCV[, "animal"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "animal"])
+
+#cat Va estimate with 95% HPD
+cat("The Va estimate for Trappability (BCI fixed) is: ", round(Va, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vi
+Vi <- posterior.mode(model_TRAP1$VCV[, "ID"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "ID"])
+
+#cat Va estimate with 95% HPD
+cat("The Vi estimate for Trappability (BCI fixed) is: ", round(Vi, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vr
+Vr <- posterior.mode(model_TRAP1$VCV[, "units"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_TRAP1$VCV[, "units"])
+
+#cat Va estimate with 95% HPD
+cat("The Vr estimate for Trappability (BCI fixed) is: ", round(Vr, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate Vp
+Vp <- model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"]
+
+#HPD intervals for Vp
+x <- HPDinterval(Vp)
+
+#cat Vp estimate with 95% HPD
+cat("The Vp estimate for Trappability (BCI fixed) is: ", round(posterior.mode(Vp), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate heritability
+herit <- model_TRAP1$VCV[, "animal"]/(model_TRAP1$VCV[, "animal"] + model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"] )
+
+#HPD intervals for heritability
+x <- HPDinterval(herit)
+
+#cat heritability estimate with 95% HPD
+cat("The heritability estimate for trappability (BCI fixed) is: ", round(posterior.mode(herit), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract DIC from model with "animal" term
+DIC_full <- model_TRAP1$DIC
+
+#load model without "animal" term for trappability
+load("TRAP_1_SVLfilt_noVa2.RData") #note: over-writing earlier trappability model
+
+#view model to confirm it's correct
+summary(model_TRAP1)
+
+#view priors to confirm they're correct
+prior_TRAP1
+
+#extract DIC for model without "animal" term for trappability
+DIC_reduced <- model_TRAP1$DIC
+
+#cat statement about the DICs of the models
+cat("The DIC of the model with the animal term is: ", round(DIC_full, digits = 3), "\n", "The DIC of the model without the animal term is: ", round(DIC_reduced, digits = 3), "\n\n\n")
+
+#calculate difference between DICs
+diff <- DIC_reduced - DIC_full
+
+#test whether heritability is significant
+if(diff >= 10) {
+  cat("Trappability model with animal term (BCI fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with animal term (BCI fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability (BCI fixed) has significant heritability.\n") 
+} else {
+  cat("Trappability model with animal term (BCI fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with animal term (BCI fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability (BCI fixed) does not have significant heritability.")
+}
+
+```
 
 #2. Significance Testing - Repeatability
 
@@ -458,6 +546,60 @@ if(diff >= 10) {
   cat("Trappability model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability has significant repeatability\n") 
 } else {
   cat("Trappability model with ID term has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability does not have significant repeatability")
+}
+
+```
+
+
+##Trappability (TRAP) Repeatability with BCI as Fixed Effect
+```{r}
+#clear memory
+rm(list=ls())
+
+#load model with only "individual" term
+load("TRAP_1_SVLfilt_noVa2.RData")
+
+#view model to confirm it's correct
+summary(model_TRAP1)
+
+#view priors to confirm their correct
+prior_TRAP1
+
+#calculate repeatability
+repeatability <- model_TRAP1$VCV[, "ID"]/(model_TRAP1$VCV[, "ID"] + model_TRAP1$VCV[, "units"] )
+
+#HPD intervals for repeatability
+x <- HPDinterval(repeatability)
+
+#cat statement about repeatability with 95% HPD
+cat("The repeatability estimate for Trappability (BCI fixed) is: ", round(posterior.mode(repeatability), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract DIC from model with "ID" term
+DIC_full <- model_TRAP1$DIC
+
+#load model without "ID" term for Trappability 
+load("TRAP_1_SVLfilt_noVa_noI2.RData") #note: over-writing earlier Trappability model
+
+#view model to confirm it's correct
+summary(model_TRAP1)
+
+#view priors to confirm they're correct
+prior_TRAP1
+
+#extract DIC for model without "animal" term for trappabilitt
+DIC_reduced <- model_TRAP1$DIC
+
+#cat statement about the DICs of the models
+cat("The DIC of the model with the ID term is: ", round(DIC_full, digits = 3), "\n", "The DIC of the model without the ID term is: ", round(DIC_reduced, digits = 3), "\n\n\n")
+
+#calculate difference between DICs
+diff <- DIC_reduced - DIC_full
+
+#test whether repeatability is significant
+if(diff >= 10) {
+  cat("Trappability model with ID term (BCI fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term (BCI fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability (BCI fixed) has significant repeatability\n") 
+} else {
+  cat("Trappability model with ID term (BCI fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "Trappability model with ID term (BCI fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "Trappability (BCI fixed) does not have significant repeatability")
 }
 
 ```
