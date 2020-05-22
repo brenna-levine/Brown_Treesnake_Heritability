@@ -209,6 +209,96 @@ if(diff >= 10) {
 }
 
 ```
+##Snout-Vent Length (SVL) Heritability with Age as fixed effect
+```{r}
+#clear memory
+rm(list=ls())
+
+#load model with "animal" term for SVL
+load("SVL_1_dummy_SVLfilt2.RData")
+
+#view model to confirm it's correct
+summary(model_SVL1)
+
+#view priors to confirm they're correct
+prior_SVL1
+
+#extract posterior mode of Va
+Va <- posterior.mode(model_SVL1$VCV[, "animal"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "animal"])
+
+#cat Va estimate with 95% HPD
+cat("The Va estimate for SVL is: ", round(Va, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vi
+Vi <- posterior.mode(model_SVL1$VCV[, "ID"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "ID"])
+
+#cat Va estimate with 95% HPD
+cat("The Vi estimate for SVL with age as fixed effect is: ", round(Vi, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract posterior mode of Vr
+Vr <- posterior.mode(model_SVL1$VCV[, "units"])
+
+#extract HPD intervals for Va
+x <- HPDinterval(model_SVL1$VCV[, "units"])
+
+#cat Va estimate with 95% HPD
+cat("The Vr estimate for SVL with age as fixed effect is: ", round(Vr, digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate Vp
+Vp <- model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"]
+
+#HPD intervals for Vp
+x <- HPDinterval(Vp)
+
+#cat Vp estimate with 95% HPD
+cat("The Vp estimate for SVL with age as fixed effect is: ", round(posterior.mode(Vp), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#calculate heritability
+herit <- model_SVL1$VCV[, "animal"]/(model_SVL1$VCV[, "animal"] + model_SVL1$VCV[, "ID"] + model_SVL1$VCV[, "units"] )
+
+#HPD intervals for heritability
+x <- HPDinterval(herit)
+
+#cat heritability estimate with 95% HPD
+cat("The heritability estimate for SVL with age as fixed effect is: ", round(posterior.mode(herit), digits = 3), "(", round(x[,1], digits = 3), "-", round(x[,2], digits = 3), ")", "\n")
+
+#extract DIC from model with "animal" term
+DIC_full <- model_SVL1$DIC
+
+#load model without "animal" term for SVL 
+load("SVL_1_SVLfilt_noVa2.RData") #note: over-writing earlier SVL model
+
+#view model to confirm it's correct
+summary(model_SVL1)
+
+#view priors to confirm they're correct
+prior_SVL1
+
+#extract DIC for model without "animal" term for BCI
+DIC_reduced <- model_SVL1$DIC
+
+#cat statement about the DICs of the models
+cat("The DIC of the model with the animal term (age fixed) is: ", round(DIC_full, digits = 3), "\n", "The DIC of the model without the animal term (age fixed) is: ", round(DIC_reduced, digits = 3), "\n\n\n")
+
+#calculate difference between DICs
+diff <- DIC_reduced - DIC_full
+
+#test whether heritability is significant
+if(diff >= 10) {
+  cat("SVL model with animal term (age fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with animal term (age fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL (age fixed) has significant heritability.\n") 
+} else {
+  cat("SVL model with animal term (age fixed) has smaller DIC: ", DIC_full < DIC_reduced, "\n", "SVL model with animal term (age fixed) has SIGNIFICANTLY smaller DIC:", diff >= 10, "\n", "SVL (age fixed) does not have significant heritability.")
+}
+
+```
+
+
 
 ##Trappability (TRAP) Heritability
 ```{r}
