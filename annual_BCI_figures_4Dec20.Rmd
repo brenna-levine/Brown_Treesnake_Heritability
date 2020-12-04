@@ -1,0 +1,48 @@
+---
+title: "annual_body_condition_BTS"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+This R Notebook produces a figure of the mean BTS body condition for male and female brown treesnakes (*Boiga irregularis*) by year for the study on heritability of mean annual brown treesnake body condition.
+
+```{r}
+#read in filtered BTS data set
+BTS_data = read.delim("BTS_RM_SVLfilt.txt", stringsAsFactors = FALSE)
+
+#subset data by sex
+data_f <- subset(BTS_data, SEX=='F')
+data_m <- subset(BTS_data, SEX=='M')
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+```
+```{r}
+#plot annual BCI measurements (individual means) for adult female BTS
+annual_BCI_f <- ggplot(data_f, aes(YEAR, BCI_RESID)) +
+           geom_point() +
+           xlab("Year") + ylab("Female Body Condition") +
+          theme_classic() + scale_x_continuous(breaks=seq(2006, 2018, 1)) 
+#view plot
+annual_BCI_f
+
+```
+
+```{r}
+#plot annual BCI measurements (individual means) for adult male BTS
+annual_BCI_m <- ggplot(data_m, aes(YEAR, BCI_RESID)) +
+           geom_point() +
+           xlab("Year") + ylab("Male Body Condition") +
+          theme_classic() + scale_x_continuous(breaks=seq(2005, 2018, 1)) 
+
+annual_BCI_m
+
+```
+
